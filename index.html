@@ -1,474 +1,192 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#176b5b">
-<title>问证智学 · 学习证据链探究平台</title>
-<style>
-:root{
-  --bg:#f4f7f5;--card:#fff;--ink:#18312b;--muted:#687d75;
-  --green:#176b5b;--light:#e8f4ee;--border:#dfe8e3;
-  --orange:#bd7633;--shadow:0 8px 28px rgba(24,49,43,.05);
-}
-*{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--ink);
-  font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
-  line-height:1.65;
-}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-button,a,input,textarea,select{outline-offset:4px}
-button:focus-visible,a:focus-visible,input:focus-visible,
-textarea:focus-visible,select:focus-visible{outline:3px solid #74b8a2}
-button{
-  border:1px solid var(--border);background:white;color:var(--ink);
-  border-radius:10px;padding:9px 14px;
-}
-button:hover{border-color:var(--green);background:#f1f8f4}
-button.primary{background:var(--green);color:white;border-color:var(--green)}
-button.primary:hover{background:#105344}
-button.danger{color:#a33939}
-button:disabled{opacity:.55;cursor:default}
-a{color:var(--green)}
-.topbar{
-  background:white;border-bottom:1px solid var(--border);
-  padding:16px max(20px,calc((100vw - 1380px)/2));
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{
-  width:42px;height:42px;background:var(--green);color:white;
-  border-radius:13px;display:grid;place-items:center;font-weight:800;
-}
-.brand strong{display:block;font-size:20px}
-.brand small{display:block;color:var(--muted)}
-.status{font-size:12px;color:var(--muted);max-width:310px}
-.layout{
-  max-width:1420px;margin:0 auto;padding:24px 20px;
-  display:grid;grid-template-columns:228px minmax(0,1fr);gap:24px;
-}
-.sidebar{align-self:start}
-.panel,.card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:16px;box-shadow:var(--shadow);
-}
-.panel{padding:18px;margin-bottom:16px}
-.side-title{font-size:12px;color:var(--muted);margin:0 0 10px}
-.task-button{
-  display:block;width:100%;text-align:left;margin-bottom:9px;padding:13px;
-}
-.task-button strong{display:block;font-size:14px}
-.task-button small{color:var(--muted)}
-.task-button.active{background:var(--light);border-color:#a9cdbd;color:var(--green)}
-.progress-item{
-  display:flex;justify-content:space-between;gap:8px;font-size:13px;
-  padding:7px 0;border-bottom:1px dashed var(--border);
-}
-.progress-item:last-child{border:0}
-.notice{font-size:12px;color:var(--muted);margin:0}
-.workspace{min-width:0}
-.hero{
-  border-radius:18px;background:linear-gradient(120deg,#145447,#267c65);
-  color:white;padding:26px;margin-bottom:18px;
-}
-.eyebrow{font-size:12px;letter-spacing:1px;opacity:.8}
-.hero h1{font-size:27px;margin:8px 0 10px;line-height:1.4}
-.hero p{margin:0;max-width:780px;color:#e0f0e7}
-.hero-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.pill{
-  display:inline-block;padding:3px 10px;font-size:12px;border-radius:999px;
-  background:#edf4f0;color:var(--green);
-}
-.hero .pill{background:rgba(255,255,255,.14);color:white}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
-.content-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px}
-.main-column,.right-column{min-width:0}
-.card{padding:22px;margin-bottom:18px}
-.card h2{font-size:18px;margin:0 0 6px}
-.card h3{font-size:15px;margin:16px 0 8px}
-.subtle{font-size:13px;color:var(--muted);margin:0 0 16px}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.step{
-  display:inline-grid;place-items:center;background:var(--light);
-  color:var(--green);border-radius:8px;width:28px;height:28px;
-  margin-right:8px;font-size:13px;vertical-align:middle;
-}
-label.field{display:block;margin:14px 0}
-label.field>span{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
-textarea,input[type=text],select{
-  width:100%;padding:10px 12px;border:1px solid var(--border);
-  border-radius:9px;background:#fcfdfc;color:var(--ink);
-}
-textarea{min-height:96px;resize:vertical}
-.help{font-size:12px;color:var(--muted);margin:5px 0 0}
-.suggestions{display:flex;gap:7px;flex-wrap:wrap}
-.suggestions button{font-size:12px;padding:7px 9px}
-.chart-wrap{height:260px;margin:12px 0}
-canvas{display:block;width:100%;height:100%}
-.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
-.legend-item{display:flex;align-items:center;gap:5px}
-.legend-dot{width:10px;height:10px;border-radius:50%}
-.table-wrap{overflow:auto;margin-top:12px}
-table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}
-th,td{padding:8px;text-align:left;border-bottom:1px solid var(--border)}
-th{background:#f2f7f4;color:var(--green)}
-.evidence-list{display:grid;gap:10px}
-.evidence-card{
-  border:1px solid var(--border);border-radius:11px;padding:13px;
-  display:flex;align-items:flex-start;gap:10px;background:#fcfdfc;
-}
-.evidence-card.selected{background:var(--light);border-color:#a9cdbd}
-.evidence-card input{margin-top:6px;accent-color:var(--green);flex-shrink:0}
-.evidence-body{min-width:0;flex:1}
-.evidence-body strong{display:block;font-size:14px}
-.evidence-body p{margin:5px 0;font-size:13px}
-.evidence-body small{font-size:11px;color:var(--muted)}
-.evidence-body button{font-size:11px;padding:3px 7px;margin-top:6px}
-.chain-node{
-  position:relative;padding:12px;background:#f4f8f5;border-radius:10px;
-  margin-bottom:22px;
-}
-.chain-node:not(:last-child)::after{
-  content:"↓";position:absolute;bottom:-23px;left:50%;color:#83a494;
-}
-.chain-node strong{display:block;font-size:12px;color:var(--green);margin-bottom:5px}
-.chain-node p{font-size:12px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
-.empty{color:#8b9c94}
-.score{display:flex;align-items:baseline;gap:5px;margin:12px 0}
-.score strong{font-size:40px;color:var(--green);line-height:1}
-.score span{font-size:12px;color:var(--muted)}
-.feedback-list{padding-left:19px;font-size:13px;margin:12px 0}
-.feedback-list li{margin-bottom:7px}
-.callout{
-  border-left:3px solid #d7a055;background:#fff8ee;padding:10px 12px;
-  font-size:12px;color:#775324;border-radius:5px;margin:12px 0;
-}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.stat{background:#f3f7f4;border-radius:10px;text-align:center;padding:12px 5px}
-.stat strong{display:block;font-size:22px;color:var(--green)}
-.stat small{font-size:11px;color:var(--muted)}
-.footer{font-size:12px;color:var(--muted);text-align:center;padding:12px 0 26px}
-dialog{
-  border:1px solid var(--border);border-radius:16px;padding:24px;
-  max-width:620px;width:calc(100% - 32px);color:var(--ink);
-}
-dialog::backdrop{background:rgba(12,35,27,.4)}
-dialog h2{margin-top:0}
-dialog p,dialog li{font-size:14px}
-dialog .toolbar{margin-bottom:0;justify-content:flex-end}
-.toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
-  background:#183c30;color:white;padding:12px 20px;border-radius:12px;
-  max-width:calc(100% - 32px);z-index:30;box-shadow:var(--shadow);
-}
-.toast[hidden]{display:none}
-@media(max-width:1120px){
-  .content-grid{grid-template-columns:minmax(0,1fr)}
-  .right-column{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
-  .right-column .card{margin:0}
-}
-@media(max-width:760px){
-  .topbar{padding:14px 16px;align-items:flex-start}
-  .brand strong{font-size:17px}.brand small{font-size:11px}
-  .status{max-width:120px;font-size:10px}
-  .layout{display:block;padding:16px 12px}
-  .sidebar{display:grid;grid-template-columns:1fr}
-  .sidebar .panel:nth-child(2){display:none}
-  .task-button{margin-bottom:7px}
-  .hero{padding:20px}.hero h1{font-size:22px}
-  .card{padding:17px}.right-column{display:block}
-  .right-column .card{margin-bottom:18px}
-  .section-head{align-items:flex-start;flex-direction:column}
-  .section-head select{max-width:100%}
-  .toolbar button{font-size:12px;padding:8px 10px}
-}
-@media print{
-  body{background:white;font-size:12px}
-  .topbar,.sidebar,.toolbar,.footer,.toast,dialog,
-  .suggestions,#addEvidenceForm,.evidence-body button{display:none!important}
-  .layout{display:block;padding:0;max-width:none}
-  .hero{background:white;color:black;border:1px solid #aaa;padding:14px}
-  .hero p,.hero .pill{color:black}
-  .content-grid,.right-column{display:block}
-  .card{box-shadow:none;border-color:#bbb;break-inside:avoid;margin-bottom:12px}
-  textarea,input[type=text]{border:0;background:white;padding:0;resize:none}
-  textarea{overflow:visible}
-  .chart-wrap{height:230px}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f7f4">
+  <link rel="icon" href="data:,">
+  <title>问证智学｜学习证据链探究平台</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <p>测试Gitee镜像自动同步到GitHub</p>
-<header class="topbar">
-  <div class="brand">
-    <div class="logo" aria-hidden="true">证</div>
-    <div>
-      <strong>问证智学</strong>
-      <small>学习证据链 · 探究式教学与科普实践</small>
-    </div>
-  </div>
-  <div class="status" id="saveStatus" role="status" aria-live="polite">
-    正在加载本地记录…
-  </div>
-</header>
-
-<div class="layout">
-  <aside class="sidebar" aria-label="任务导航">
-    <section class="panel">
-      <p class="side-title">探究任务</p>
-      <div id="taskNav"></div>
-    </section>
-    <section class="panel">
-      <p class="side-title">当前任务进度</p>
-      <div id="progress"></div>
-    </section>
-    <section class="panel">
-      <p class="side-title">使用说明</p>
-      <p class="notice">
-        从提出问题开始，用数据与证据支撑结论。记录保存在当前浏览器，
-        请定期导出备份。不同设备不会自动同步。
-      </p>
-    </section>
-  </aside>
-
-  <main class="workspace">
-    <section class="hero">
-      <div class="eyebrow">QUESTION · EVIDENCE · REASONING</div>
-      <h1 id="taskTitle"></h1>
-      <p id="taskIntro"></p>
-      <div class="hero-meta">
-        <span class="pill" id="taskCategory"></span>
-        <span class="pill">建议 45—60 分钟</span>
-        <span class="pill">教学模拟数据</span>
-      </div>
-    </section>
-
-    <div class="toolbar">
-      <button class="primary" id="exportReport">导出当前探究报告</button>
-      <button id="exportArchive">备份全部任务 JSON</button>
-      <button id="importArchive">导入备份</button>
-      <button id="printReport">打印 / 保存 PDF</button>
-      <button id="showHelp">平台说明</button>
-      <button class="danger" id="resetTask">清空当前任务</button>
-      <input type="file" id="importFile" accept=".json,application/json" hidden>
-    </div>
-
-    <div class="content-grid">
-      <div class="main-column">
-        <section class="card">
-          <h2><span class="step">01</span>提出问题与假设</h2>
-          <p class="subtle">让问题可以观察、比较和验证。</p>
-          <label class="field">
-            <span>我的探究问题</span>
-            <textarea data-field="question" maxlength="12000"
-              placeholder="你想研究什么？明确对象、条件与比较方式。"></textarea>
-          </label>
-          <h3>假设参考</h3>
-          <div class="suggestions" id="hypothesisSuggestions"></div>
-          <label class="field">
-            <span>我的假设</span>
-            <textarea data-field="hypothesis" maxlength="12000"
-              placeholder="如果改变某个条件，可能出现什么变化？为什么？"></textarea>
-          </label>
-          <label class="field">
-            <span>验证方案</span>
-            <textarea data-field="plan" maxlength="12000"
-              placeholder="说明自变量、因变量、控制变量、测量方法和重复次数。"></textarea>
-          </label>
-        </section>
-
-        <section class="card">
-          <div class="section-head">
-            <h2><span class="step">02</span>观察与比较数据</h2>
-            <select id="metricSelect" aria-label="选择图表指标"
-              style="max-width:230px"></select>
-          </div>
-          <p class="subtle" id="dataDescription"></p>
-          <div class="chart-wrap">
-            <canvas id="chart" role="img" aria-label="模拟数据比较折线图"></canvas>
-          </div>
-          <div class="legend" id="legend"></div>
-          <p class="help">
-            以下数据表与图表对应。图表纵轴按当前数据范围缩放，请注意数值差异。
-          </p>
-          <div class="table-wrap" id="dataTable"></div>
-          <div class="callout">
-            这里的数值用于教学演示，不是实地测量结果。
-            参加比赛时，应注明模拟数据，并用真实实验或调查记录补充验证。
-          </div>
-          <label class="field">
-            <span>我的观察记录</span>
-            <textarea data-field="observation" maxlength="12000"
-              placeholder="写下关键数值、变化趋势、异常现象及你发现的关系。"></textarea>
-          </label>
-        </section>
-
-        <section class="card">
-          <h2><span class="step">03</span>选择与补充证据</h2>
-          <p class="subtle">
-            选择能够支持或质疑假设的证据。证据数量多，并不代表结论一定正确。
-          </p>
-          <div class="evidence-list" id="evidenceList"></div>
-          <form id="addEvidenceForm">
-            <h3>添加自己的证据</h3>
-            <label class="field">
-              <span>证据标题</span>
-              <input type="text" id="extraTitle" maxlength="150"
-                placeholder="例如：校园午后地表温度实测" required>
-            </label>
-            <label class="field">
-              <span>证据内容</span>
-              <textarea id="extraContent" maxlength="4000"
-                placeholder="记录数值、现象、样本量和采集条件。" required></textarea>
-            </label>
-            <label class="field">
-              <span>来源与采集方法</span>
-              <input type="text" id="extraSource" maxlength="500"
-                placeholder="例如：10月10日，红外测温仪，三处测点各测三次" required>
-            </label>
-            <button type="submit">添加并选用这条证据</button>
-          </form>
-        </section>
-
-        <section class="card">
-          <h2><span class="step">04</span>建立结论与证据之间的联系</h2>
-          <p class="subtle">用“主张—证据—推理”解释你为什么得出这个结论。</p>
-          <label class="field">
-            <span>主张：我的结论是什么？</span>
-            <textarea data-field="claim" maxlength="12000"
-              placeholder="给出明确但不过度概括的结论，注明适用条件。"></textarea>
-          </label>
-          <label class="field">
-            <span>推理：这些证据为什么支持或质疑我的结论？</span>
-            <textarea data-field="reasoning" maxlength="12000"
-              placeholder="引用具体证据或数值，并结合科学原理解释。"></textarea>
-          </label>
-          <label class="field">
-            <span>局限：有哪些不确定性或其他解释？</span>
-            <textarea data-field="limits" maxlength="12000"
-              placeholder="考虑样本量、测量误差、控制变量、相关与因果的区别。"></textarea>
-          </label>
-          <label class="field">
-            <span>下一步：怎样改进验证或应用结果？</span>
-            <textarea data-field="next" maxlength="12000"
-              placeholder="提出可以执行的补充实验、观察或行动方案。"></textarea>
-          </label>
-        </section>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="主导航">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">问</div>
+        <div>
+          <strong>问证智学</strong>
+          <span>Evidence Classroom</span>
+        </div>
       </div>
 
-      <aside class="right-column" aria-label="证据链和学习反馈">
-        <section class="card">
-          <h2>我的学习证据链</h2>
-          <p class="subtle">随填写内容自动更新。</p>
-          <div id="chain"></div>
+      <nav class="nav-list">
+        <button class="nav-item active" data-view="overview"><i data-lucide="layout-dashboard"></i><span>学习总览</span></button>
+        <button class="nav-item" data-view="inquiry"><i data-lucide="flask-conical"></i><span>探究工坊</span><b>进行中</b></button>
+        <button class="nav-item" data-view="evidence"><i data-lucide="layers-3"></i><span>证据档案</span></button>
+        <button class="nav-item" data-view="teacher"><i data-lucide="chart-no-axes-combined"></i><span>教师洞察</span></button>
+        <button class="nav-item" data-view="about"><i data-lucide="shield-check"></i><span>作品说明</span></button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="role-switch" aria-label="角色切换">
+          <button class="active" data-role="student">学生</button>
+          <button data-role="teacher">教师</button>
+        </div>
+        <div class="user-row">
+          <div class="avatar">林</div>
+          <div><strong id="userName">林晓雨</strong><span id="userMeta">八年级 2 班</span></div>
+          <button class="icon-button" title="更多"><i data-lucide="ellipsis"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <button class="icon-button menu-button" id="menuButton" title="打开导航"><i data-lucide="menu"></i></button>
+        <div class="breadcrumb"><span>智慧教育实践</span><i data-lucide="chevron-right"></i><strong id="crumb">学习总览</strong></div>
+        <div class="top-actions">
+          <div class="sync-state"><span></span>本地已保存</div>
+          <button class="icon-button" title="通知"><i data-lucide="bell"></i></button>
+          <button class="primary small" id="openCoach"><i data-lucide="sparkles"></i>AI 学伴</button>
+        </div>
+      </header>
+
+      <section class="view active" id="overview">
+        <div class="page-heading">
+          <div><p class="eyebrow">今日学习</p><h1>下午好，林晓雨</h1><p>不要急着找答案，先让证据开口。</p></div>
+          <div class="date-tile"><b>14</b><span>探究日</span></div>
+        </div>
+
+        <section class="focus-band">
+          <div class="focus-copy">
+            <div class="status-line"><span class="status-tag">科学 · 八年级</span><span>预计 32 分钟</span></div>
+            <h2 id="focusTaskTitle">怎样让午后的教室更凉快？</h2>
+            <p id="focusTaskSummary">分析三组实测数据，为东侧教室提出低成本、可验证的降温方案。</p>
+            <div class="progress-label"><span>当前进度</span><strong id="progressText">3 / 5 步</strong></div>
+            <div class="progress-track"><span id="progressBar" style="width:60%"></span></div>
+            <button class="dark-action" data-go="inquiry">继续探究 <i data-lucide="arrow-right"></i></button>
+          </div>
+          <div class="focus-visual" aria-label="教室温度观测图">
+            <div class="sun"></div>
+            <div class="room-grid">
+              <span class="window one"></span><span class="window two"></span><span class="window three"></span>
+              <div class="desk d1"></div><div class="desk d2"></div><div class="desk d3"></div>
+            </div>
+            <div class="sensor-card"><i data-lucide="thermometer-sun"></i><div><span>东侧教室</span><strong>31.8°C</strong></div><small>14:30</small></div>
+          </div>
         </section>
 
-        <section class="card">
-          <h2>探究完整度反馈</h2>
-          <p class="subtle">本地规则提示，不是大模型评审或竞赛评分。</p>
-          <div class="score">
-            <strong id="score">0</strong><span>/ 100</span>
-          </div>
-          <ul class="feedback-list" id="feedback"></ul>
-          <div class="callout">
-            完整度只检查记录是否充分，不判断科学结论真伪。
-            请由教师结合证据质量与真实过程进行评价。
-          </div>
-          <button id="refreshFeedback">刷新反馈</button>
-        </section>
+        <div class="section-title"><div><h2>你的探究能力</h2><p>基于本学期 6 次学习轨迹</p></div><button class="text-button" data-go="evidence">查看档案 <i data-lucide="arrow-up-right"></i></button></div>
+        <div class="metrics-grid">
+          <article class="metric"><div class="metric-icon green"><i data-lucide="search-check"></i></div><span>提出问题</span><strong>86</strong><div class="mini-bar"><i style="width:86%"></i></div><small>较上次 +8</small></article>
+          <article class="metric"><div class="metric-icon blue"><i data-lucide="database"></i></div><span>使用证据</span><strong>72</strong><div class="mini-bar"><i style="width:72%"></i></div><small>需要更多交叉验证</small></article>
+          <article class="metric"><div class="metric-icon amber"><i data-lucide="git-branch"></i></div><span>逻辑推理</span><strong>78</strong><div class="mini-bar"><i style="width:78%"></i></div><small>较上次 +5</small></article>
+          <article class="metric"><div class="metric-icon coral"><i data-lucide="message-square-text"></i></div><span>反思表达</span><strong>81</strong><div class="mini-bar"><i style="width:81%"></i></div><small>论证结构清晰</small></article>
+        </div>
+        <div class="section-title task-library-title"><div><h2>探究任务库</h2><p>从校园走向城市与生态，用证据解释真实世界</p></div><span class="task-count">3 个任务</span></div>
+        <div class="task-library" id="taskLibrary">
+          <article class="task-card active" data-task-card="classroom"><div class="task-card-top"><span class="task-icon indoor"><i data-lucide="school"></i></span><span class="task-state">进行中</span></div><p>科学 · 热传递</p><h3>怎样让午后的教室更凉快？</h3><span>比较降温效果、成本与证据可靠度</span><button class="secondary" data-start-task="classroom">继续任务<i data-lucide="arrow-right"></i></button></article>
+          <article class="task-card" data-task-card="heat-island"><div class="task-card-top"><span class="task-icon city"><i data-lucide="building-2"></i></span><span class="task-state new">新任务</span></div><p>地理 · 城市环境</p><h3>城市热岛是如何形成的？</h3><span>比较不同地表和时段的温度观测</span><button class="secondary" data-start-task="heat-island">开始探究<i data-lucide="arrow-right"></i></button></article>
+          <article class="task-card" data-task-card="pond"><div class="task-card-top"><span class="task-icon pond"><i data-lucide="waves"></i></span><span class="task-state new">新任务</span></div><p>生物 · 校园生态</p><h3>校园池塘水质为何发生变化？</h3><span>追踪营养盐、藻类与溶解氧的关系</span><button class="secondary" data-start-task="pond">开始探究<i data-lucide="arrow-right"></i></button></article>
+        </div>
+      </section>
 
-        <section class="card">
-          <h2>本机任务概览</h2>
-          <p class="subtle">仅统计此浏览器中的个人记录。</p>
-          <div class="stats">
-            <div class="stat"><strong id="startedCount">0</strong><small>已开始任务</small></div>
-            <div class="stat"><strong id="evidenceCount">0</strong><small>选用证据</small></div>
-            <div class="stat"><strong id="completeCount">0</strong><small>完成主要记录</small></div>
-          </div>
-          <div id="taskOverview"></div>
-        </section>
-      </aside>
-    </div>
+      <section class="view" id="inquiry">
+        <div class="workspace-head">
+          <div><p class="eyebrow" id="taskNumber">探究任务 01</p><h1 id="taskTitle">怎样让午后的教室更凉快？</h1><p id="taskSubtitle">用数据选择方案，并完成“主张—证据—推理”论证。</p></div>
+          <div class="workspace-tools"><label class="task-select-label"><span>切换任务</span><select id="taskSelect"><option value="classroom">教室降温</option><option value="heat-island">城市热岛</option><option value="pond">池塘生态</option></select></label><button class="secondary" id="resetTask"><i data-lucide="rotate-ccw"></i>重置任务</button></div>
+        </div>
 
-    <footer class="footer">
-      问证智学 · 用证据解释世界 · 本地静态教学演示版
-    </footer>
-  </main>
-</div>
+        <div class="stepper" role="tablist">
+          <button data-step="1"><span>1</span><b>理解情境</b></button>
+          <button data-step="2"><span>2</span><b>提出假设</b></button>
+          <button data-step="3" class="active"><span>3</span><b>分析证据</b></button>
+          <button data-step="4"><span>4</span><b>形成论证</b></button>
+          <button data-step="5"><span>5</span><b>反思迁移</b></button>
+        </div>
 
-<dialog id="helpDialog">
-  <h2>关于这个平台</h2>
-  <p>
-    问证智学通过问题、假设、观察、证据、推理与反思，帮助学生记录科学探究过程。
-    平台内置三项教学任务，也支持补充自己的文字证据。
-  </p>
-  <ul>
-    <li>图表与内置证据使用教学模拟数据，不能作为真实研究发现。</li>
-    <li>反馈由本地规则生成，没有调用 AI 大模型。</li>
-    <li>记录保存在当前浏览器；清理网站数据、换设备可能导致记录不可见。</li>
-    <li>JSON 备份用于恢复任务；Markdown 报告用于展示与提交。</li>
-    <li>此版本没有账号、云同步、教师班级管理或后台服务。</li>
-    <li>可以离线打开；如需公网访问，需要把 dist 目录部署到静态托管服务。</li>
-  </ul>
-  <div class="toolbar"><button id="closeHelp">关闭</button></div>
-</dialog>
-<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+        <div class="workspace-grid">
+          <section class="work-panel">
+            <div class="step-content" data-step-content="1">
+              <p class="eyebrow">真实情境</p><h2 id="scenarioTitle">东侧教室的午后难题</h2>
+              <p id="scenarioText">连续一周，八年级 2 班在 14:00—16:00 的室温高于相邻教室。学校希望在预算有限、不新增空调的前提下改善学习环境。</p>
+              <div class="fact-strip" id="factStrip"></div>
+              <label class="field-label" for="questionInput">你认为需要解决的核心问题是什么？</label>
+              <textarea id="questionInput" placeholder="用一句可研究、可验证的话描述问题……"></textarea>
+            </div>
 
-<script>
-"use strict";
+            <div class="step-content" data-step-content="2">
+              <p class="eyebrow">可验证假设</p><h2>先预测，再寻找证据</h2>
+              <label class="field-label" for="hypothesisInput" id="hypothesisLabel">如果采取……，那么……，因为……</label>
+              <textarea id="hypothesisInput" placeholder="写下一个可以用数据验证的预测……"></textarea>
+              <div class="option-grid" id="hypothesisOptions"></div>
+            </div>
 
-const TASKS = {
-  classroom: {
-    title: "怎样让教室更凉爽？",
-    short: "教室降温",
-    category: "校园生活 · 环境探究",
-    intro: "比较遮阳、通风和植物布置条件，提出既有效又可验证的教室降温方案。",
-    question: "在相同天气和测量时间下，遮阳与对流通风会怎样影响教室温度？",
-    description: "模拟晴天不同教室布置下的室内空气温度。各组按相同时段记录。",
-    hypotheses: [
-      "在其他条件相同时，遮阳可减少太阳辐射进入，使午后室温低于未遮阳组。",
-      "在室外空气较凉且形成有效对流时，开窗通风可能降低室温。",
-      "少量盆栽未必能显著降低整间教室温度，需要控制条件进行实测。"
-    ],
-    metrics: [{
-      name: "室内空气温度", unit: "℃",
-      labels: ["08:00","10:00","12:00","14:00","16:00"],
-      series: [
-        {name:"原始布置", values:[26.0,28.8,31.4,33.1,32.0]},
-        {name:"遮阳", values:[25.8,27.3,29.0,30.2,29.8]},
-        {name:"遮阳与对流通风", values:[25.5,26.9,28.2,29.0,28.6]}
-      ]
-    }],
-    evidence: [
-      {
-        id:"c1",title:"午后温度比较",
-        content:"14:00 原始布置为 33.1℃，遮阳组为 30.2℃，遮阳与对流通风组为 29.0℃。",
-        source:"内置教学模拟温度表"
-      },
-      {
-        id:"c2",title:"太阳辐射与遮阳",
-        content:"遮阳可减少太阳辐射进入室内；实际效果还受到窗户朝向、遮阳材料和天气影响。",
-        source:"教学原理说明；非实测记录"
-      },
-      {
-        id:"c3",title:"通风效果的条件",
-        content:"通风改变空气交换。降温效果与室内外温差、风速、开口位置及是否形成对流有关。",
-        source:"教学原理说明；需结合实测验证"
-      },
-      {
-        id:"c4",title:"植物作用需要区分尺度",
-        content:"植物可通过遮阴和蒸腾影响局部环境，但少量盆栽对整间教室温度的影响不能直接由此推定。",
-        source:"教学原理说明；提醒避免过度概括"
-      }
-    ]
-  },
+            <div class="step-content active" data-step-content="3">
+              <div class="panel-title"><div><p class="eyebrow">数据实验室</p><h2 id="chartTitle">三种方案的 5 日观测</h2></div><div class="legend" id="chartLegend"></div></div>
+              <div class="chart-wrap"><canvas id="tempChart" width="760" height="300" aria-label="探究任务数据折线图"></canvas></div>
+              <div class="data-table-wrap"><table><thead><tr id="dataTableHead"></tr></thead><tbody id="dataTableBody"></tbody></table></div>
+              <p class="source-note"><i data-lucide="badge-info"></i><span id="sourceNote"></span></p>
+            </div>
 
-  "heat-island": {
-    title: "城市热岛是如何形成的？",
-    short: "城市热岛",
-    category: "城市环境 · 气候科普",
-    intro: "比较城市广场、林荫区域和郊外农田的温度变化，探究地表、植被与城市热环境之间的关系。",
-    question: "城市广场、林荫区域和郊外农田的气温在一天中有什么差异？这些差异可能与哪些因素有关？",
-    description: "模拟同一天
+            <div class="step-content" data-step-content="4">
+              <p class="eyebrow">CER 论证</p><h2>让结论经得起追问</h2>
+              <div class="cer-block claim"><span>C</span><div><label for="claimInput">主张 Claim</label><textarea id="claimInput" placeholder="写出你对问题的解释或解决主张……"></textarea></div></div>
+              <div class="cer-block evidence"><span>E</span><div><label>证据 Evidence（选择至少两条）</label><div class="evidence-picks" id="evidencePicks"></div></div></div>
+              <div class="cer-block reasoning"><span>R</span><div><label for="reasoningInput">推理 Reasoning</label><textarea id="reasoningInput" placeholder="这些证据为什么能够支持你的主张？需要考虑哪些限制？"></textarea></div></div>
+            </div>
+
+            <div class="step-content" data-step-content="5">
+              <p class="eyebrow">反思与迁移</p><h2>下一次，你会怎样做得更好？</h2>
+              <div class="reflection-grid"><label><span>最改变我想法的证据</span><textarea id="reflectionEvidence" placeholder="哪条证据改变了你的判断？"></textarea></label><label><span>这次结论的局限</span><textarea id="reflectionLimit" placeholder="样本、时间或条件有哪些不足？"></textarea></label><label><span>迁移到另一个场景</span><textarea id="reflectionTransfer" placeholder="你会怎样在新的场景中重新验证？"></textarea></label></div>
+              <div class="completion-box"><i data-lucide="badge-check"></i><div><strong>生成个人探究档案</strong><p>完成后将保存问题、假设、证据选择、论证和反思。</p></div><button class="primary" id="completeTask">完成探究</button></div>
+            </div>
+
+            <footer class="step-actions"><button class="secondary" id="prevStep"><i data-lucide="arrow-left"></i>上一步</button><span id="saveHint">内容自动保存</span><button class="primary" id="nextStep">下一步<i data-lucide="arrow-right"></i></button></footer>
+          </section>
+
+          <aside class="coach-panel">
+            <div class="coach-head"><div class="coach-mark"><i data-lucide="sparkles"></i></div><div><strong>苏格拉底学伴</strong><span>只提问，不代答</span></div><span class="online-dot"></span></div>
+            <div class="coach-thread" id="coachThread">
+              <div class="coach-message"><span>AI</span><p id="coachWelcome">先别急着选降温最多的方案。学校提出了哪三个限制条件？</p></div>
+              <div class="coach-prompt-list"><button data-prompt="比较证据">帮我比较证据</button><button data-prompt="检查推理">检查我的推理</button><button data-prompt="发现局限">提醒我数据局限</button></div>
+            </div>
+            <div class="coach-input"><input id="coachInput" placeholder="描述你卡住的地方…"><button id="sendCoach" title="发送"><i data-lucide="send"></i></button></div>
+            <p class="ai-note"><i data-lucide="shield-check"></i>对话仅保存在本机；AI 建议需由学生判断。</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" id="evidence">
+        <div class="page-heading compact"><div><p class="eyebrow">成长档案</p><h1>每一步思考，都有迹可循</h1><p>记录的是推理过程，不只是最后答案。</p></div><button class="secondary" id="exportEvidence"><i data-lucide="download"></i>导出档案</button></div>
+        <div class="portfolio-layout">
+          <section class="timeline-panel"><h2>学习轨迹</h2><div class="timeline"><article><span class="timeline-dot done"><i data-lucide="check"></i></span><div><time>10 月 10 日 · 14:06</time><h3>修正研究问题</h3><p>将“教室为什么热”改为可测量的问题，加入时间段和预算约束。</p><small>学生操作 · 版本 2</small></div></article><article><span class="timeline-dot done"><i data-lucide="check"></i></span><div><time>10 月 10 日 · 14:12</time><h3>提出初始假设</h3><p>预测遮光比通风更有效，理由是东侧窗户接受持续太阳辐射。</p><small>学生原创 · 可信记录</small></div></article><article><span class="timeline-dot current"><i data-lucide="activity"></i></span><div><time>正在进行</time><h3>比较多源证据</h3><p>已查看温度、成本和噪声数据，尚未完成证据可靠度判断。</p><small>步骤 3 / 5</small></div></article><article><span class="timeline-dot"><i data-lucide="circle"></i></span><div><time>待完成</time><h3>形成完整论证</h3><p>使用 CER 结构解释方案选择与证据限制。</p></div></article></div></section>
+          <aside class="portfolio-side"><div class="score-ring"><canvas id="ringChart" width="180" height="180"></canvas><div><strong>79</strong><span>探究指数</span></div></div><div class="feedback"><span>教师观察</span><p>你已经开始关注数据可靠度。下一步请解释“为什么 5 天数据比 2 天更可信”。</p><div><div class="avatar small">周</div><small>周老师 · 10 分钟前</small></div></div><div class="integrity"><i data-lucide="fingerprint"></i><div><strong>过程可信度 96%</strong><span>7 次编辑 · 3 条证据 · 1 次 AI 提示</span></div></div></aside>
+        </div>
+      </section>
+
+      <section class="view" id="teacher">
+        <div class="page-heading compact"><div><p class="eyebrow">教师工作台</p><h1>八年级 2 班 · 探究进展</h1><p>从学习过程发现困难，而不是等到提交后。</p></div><div class="segmented"><button class="active">本次任务</button><button>本学期</button></div></div>
+        <div class="teacher-stats"><article><span>班级完成率</span><strong>68%</strong><small>28 / 41 人已进入论证</small></article><article><span>证据充分率</span><strong>61%</strong><small class="warn">11 人仅使用单一证据</small></article><article><span>有效 AI 使用</span><strong>84%</strong><small>以追问和检查为主</small></article><article><span>待关注学生</span><strong>6</strong><small class="warn">连续 8 分钟无操作</small></article></div>
+        <div class="teacher-grid">
+          <section class="analytics-panel"><div class="panel-title"><div><h2>班级证据链分布</h2><p>每列代表一名学生当前的论证质量</p></div><button class="icon-button" title="筛选"><i data-lucide="sliders-horizontal"></i></button></div><div class="heatmap" id="heatmap"></div><div class="heat-legend"><span>需要支持</span><i></i><i></i><i></i><i></i><span>表现扎实</span></div></section>
+          <section class="misconception-panel"><h2>共性困难</h2><div class="issue"><span class="issue-count">11</span><div><strong>把“降温最多”直接当作最佳方案</strong><p>忽略预算、稳定性和噪声约束</p></div><button title="查看学生"><i data-lucide="chevron-right"></i></button></div><div class="issue"><span class="issue-count amber">8</span><div><strong>没有说明证据可靠度</strong><p>未比较 5 天与 2 天样本差异</p></div><button title="查看学生"><i data-lucide="chevron-right"></i></button></div><div class="issue"><span class="issue-count blue">5</span><div><strong>推理重复数据，没有解释机制</strong><p>需要连接太阳辐射与室温变化</p></div><button title="查看学生"><i data-lucide="chevron-right"></i></button></div><button class="primary full" id="makeIntervention"><i data-lucide="wand-sparkles"></i>生成分层追问</button></section>
+        </div>
+        <section class="student-table-panel"><div class="panel-title"><div><h2>学习过程快照</h2><p>点击学生查看完整探究轨迹</p></div><div class="table-tools"><div class="search-box"><i data-lucide="search"></i><input placeholder="搜索学生"></div><button class="secondary"><i data-lucide="download"></i>导出</button></div></div><div class="data-table-wrap"><table><thead><tr><th>学生</th><th>当前步骤</th><th>证据数</th><th>论证质量</th><th>AI 使用</th><th>状态</th></tr></thead><tbody><tr><td><b>林晓雨</b></td><td>分析证据</td><td>3</td><td><span class="score good">扎实</span></td><td>1 次追问</td><td><span class="status-pill active">进行中</span></td></tr><tr><td><b>陈子航</b></td><td>形成论证</td><td>2</td><td><span class="score medium">待完善</span></td><td>3 次检查</td><td><span class="status-pill active">进行中</span></td></tr><tr><td><b>赵言</b></td><td>提出假设</td><td>0</td><td><span class="score low">需支持</span></td><td>未使用</td><td><span class="status-pill paused">停留 9 分钟</span></td></tr><tr><td><b>吴佳宁</b></td><td>已完成</td><td>4</td><td><span class="score good">扎实</span></td><td>2 次追问</td><td><span class="status-pill done">已提交</span></td></tr></tbody></table></div></section>
+      </section>
+
+      <section class="view" id="about">
+        <div class="page-heading compact"><div><p class="eyebrow">参赛作品说明</p><h1>问证智学</h1><p>基于学习证据链的 AI 探究式教学与科普实践平台。</p></div><span class="version-badge">Demo 1.1 · 离线可运行</span></div>
+        <div class="about-grid"><section><h2>问题与价值</h2><p>传统作业往往只看到最终答案，教师难以及时发现学生在提出问题、选择证据和形成推理时的困难。问证智学把完整探究过程转化为可查看、可反馈、可迁移的学习证据。</p><div class="value-list"><div><i data-lucide="route"></i><span><b>过程可见</b>记录每次修改与证据选择</span></div><div><i data-lucide="brain-circuit"></i><span><b>智能促思</b>AI 只追问，不生成标准答案</span></div><div><i data-lucide="users-round"></i><span><b>精准教学</b>教师按共性困难组织干预</span></div></div></section><section><h2>原创贡献</h2><ul class="clean-list"><li>将 CER 论证框架与可验证学习轨迹结合</li><li>设计“限制条件—数据可靠度—因果机制”三层追问</li><li>用过程可信度呈现学生、AI 与教师的贡献边界</li><li>学生端与教师端形成同一证据链闭环</li></ul></section><section><h2>数据与安全</h2><ul class="clean-list"><li>本 Demo 不采集真实学生身份信息</li><li>所有输入只保存在当前浏览器本地</li><li>三个任务的数据均为教学用模拟数据并明确误差</li><li>导出档案前由学生主动确认</li></ul></section><section><h2>AI 使用披露</h2><p>本作品中的“AI 学伴”为可交互规则 Demo，用于展示追问、推理检查与局限提醒。参赛创作阶段如使用生成式工具辅助文字、代码或视觉制作，应在提交材料中如实列明工具、环节、输入素材和人工修改过程。</p><div class="disclosure-tag"><i data-lucide="badge-check"></i>已提供独立《AI 使用披露》文档</div></section></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"><i data-lucide="circle-check"></i><span>已保存</span></div>
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="icon-button modal-close" id="modalClose" title="关闭"><i data-lucide="x"></i></button><div class="modal-icon"><i data-lucide="sparkles"></i></div><h2 id="modalTitle">分层追问已生成</h2><p id="modalText">已按三类共性困难生成课堂追问卡，可用于下一轮小组讨论。</p><button class="primary" id="modalConfirm">知道了</button></div>
+  </div>
+  <script src="assets/lucide.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
